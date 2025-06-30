@@ -11,11 +11,6 @@
             "longitude": 4.424715
         },
         {
-            "id": 1,
-            "latitude": 51.861372,
-            "longitude": 4.366493
-        },
-        {
             "id": 3,
             "latitude": 51.997973,
             "longitude": 4.444068
@@ -49,6 +44,11 @@
             "id": 9,
             "latitude": 51.894794,
             "longitude": 4.465529
+        },
+         {
+            "id": 10,
+            "latitude": 51.861372,
+            "longitude": 4.366493
         }
     ]
 }
