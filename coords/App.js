@@ -40,21 +40,21 @@ export default function App() {
   return (
     
     <View style={styles.container}>
-      
       <MapView style={styles.map}
       showsUserLocation={true}>
         {points.map(point => (
           <Marker
-            key={point.id}
+            key={point}
+            // @ts-ignore
             coordinate={{latitude: point.latitude, longitude: point.longitude}}
           />
         ))}
-        {/* <Marker
+        <Marker
       key={1}
       coordinate={points[4]}
       title={''}
       description={''}
-    /> */}
+    />
       </MapView>
     </View>
   );
@@ -66,6 +66,6 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '100%',
+    height: '80%',
   },
 });

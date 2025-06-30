@@ -3,8 +3,8 @@ import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View } from 'react-native';
 import * as Location from 'expo-location';
 
-export default function App() {
-  const [points, setPoints] = useState([])
+export default function MapScreen() {
+    const [points, setPoints] = useState([])
   async function fetchPoints(){
     const response = await fetch('https://raw.githubusercontent.com/VincentBenders/hotspots/refs/heads/main/coords/random_rotterdam_coords.json', {
         method:'GET',
@@ -58,8 +58,8 @@ export default function App() {
       </MapView>
     </View>
   );
-}
 
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
