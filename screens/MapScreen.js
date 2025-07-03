@@ -34,12 +34,10 @@ export default function MapScreen() {
     );
   };
 
-  const makeMarker = (currentLocation) => {};
   useEffect(() => {
     askPermission();
     fetchPoints();
   }, []);
-  console.log(points);
 
   return (
     <View style={styles.container}>
@@ -67,6 +65,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+ 
   map: {
     width: "100%",
     height: "100%",
