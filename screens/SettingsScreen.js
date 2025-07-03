@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function SettingsScreen() {
+  const [darkmode, setDarkmode] = useState(false);
+
   const storeData = async (value) => {
     try {
       await AsyncStorage.setItem("darkmode", JSON.stringify(value));
@@ -10,82 +12,83 @@ export default function SettingsScreen() {
       console.error(e);
     }
   };
-  const [darkmode, setDarkmode] = useState(false);
-
-  const fetchTheme = async () => {
-    try {
-      const value = await AsyncStorage.getItem("darkmode");
-      if (value !== null) {
-        // We have data!!
-        console.log(value);
-        setDarkmode(value);
-      }
-    } catch (error) {
-      // Error retrieving data
-    }
-  };
 
   const onPressFunction = () => {
-    alert(`darkmode on, darkmode: ${darkmode}`);
-    if (darkmode == false) {
-      setDarkmode(true);
-    }
-    if (darkmode == true) {
-      setDarkmode(false);
-    }
-
-    storeData(darkmode);
+    const newValue = !darkmode; // Flip the value
+    setDarkmode(newValue); // Update state
+    storeData(newValue); // Save the correct new value
+    alert(`darkmode is now: ${newValue}`);
   };
+
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem("darkmode");
       if (value !== null) {
-        // value previously stored
-        if (value == "true") setDarkmode(true);
-        if (value == "false") setDarkmode(false);
-        return;
+        const parsed = JSON.parse(value);
+        setDarkmode(parsed);
+        console.log("darkmode loaded from storage:", parsed); // ✅ log the parsed value
       }
     } catch (e) {
-      console.error(e);
+      console.error("Error loading darkmode from AsyncStorage:", e);
     }
   };
 
   useEffect(() => {
     getData();
-    fetchTheme();
   }, []);
 
+  const styles = darkmode ? stylesdark : styleslight;
+
   return (
-    <View style={styleslight.container}>
-      <Text style={styleslight.text}>darkmode: </Text>
-      <Pressable style={styleslight.press} onPress={onPressFunction}>
-        <Text style={styleslight.presstext}>darkmode</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>darkmode: {darkmode ? "on" : "off"}</Text>
+      <Pressable style={styles.press} onPress={onPressFunction}>
+        <Text style={styles.presstext}>Toggle Dark Mode</Text>
       </Pressable>
     </View>
   );
 }
+
 const styleslight = StyleSheet.create({
   container: {
-    // if (darkmode = true){
-    // flex: 1
-    // backgroundColor: '#black'
-    // color: 'red'
-    // },
-    // if (darkmode = false){
-    //   flex: 1
-    //   backgroundColor: '#FFFFFF'
-    //   color: 'red'
-    // }
+    flex: 1,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
-    color: "red",
+    color: "#000",
+    fontSize: 18,
+    marginBottom: 20,
   },
   press: {
-    width: 100,
-    padding: 5,
-    backgroundColor: "#363636",
+    backgroundColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
   },
   presstext: {
-    color: "#FFFFFF",
+    color: "#000",
+  },
+});
+
+const stylesdark = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#121212",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    color: "#fff",
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  press: {
+    backgroundColor: "#333",
+    padding: 10,
+    borderRadius: 5,
+  },
+  presstext: {
+    color: "#fff",
   },
 });
