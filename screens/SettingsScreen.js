@@ -14,9 +14,9 @@ export default function SettingsScreen() {
   };
 
   const onPressFunction = () => {
-    const newValue = !darkmode; // Flip the value
-    setDarkmode(newValue); // Update state
-    storeData(newValue); // Save the correct new value
+    const newValue = !darkmode;
+    setDarkmode(newValue);
+    storeData(newValue);
     alert(`darkmode is now: ${newValue}`);
   };
 
@@ -26,7 +26,6 @@ export default function SettingsScreen() {
       if (value !== null) {
         const parsed = JSON.parse(value);
         setDarkmode(parsed);
-        console.log("darkmode loaded from storage:", parsed); // ✅ log the parsed value
       }
     } catch (e) {
       console.error("Error loading darkmode from AsyncStorage:", e);
