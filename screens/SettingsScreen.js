@@ -1,93 +1,64 @@
+// SettingsScreen.js
+import React, { useState, useEffect } from "react";
+import { View, Text, Switch, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import getData from "../GetData"; // Adjust path if needed
 
-export default function SettingsScreen() {
-  const [darkmode, setDarkmode] = useState(false);
-
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem("darkmode", JSON.stringify(value));
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const onPressFunction = () => {
-    const newValue = !darkmode;
-    setDarkmode(newValue);
-    storeData(newValue);
-    alert(`darkmode is now: ${newValue}`);
-  };
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("darkmode");
-      if (value !== null) {
-        const parsed = JSON.parse(value);
-        setDarkmode(parsed);
-      }
-    } catch (e) {
-      console.error("Error loading darkmode from AsyncStorage:", e);
-    }
-  };
+const SettingsScreen = () => {
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    getData();
+    const fetchTheme = async () => {
+      const savedTheme = await getData("darkMode");
+      console.log("Saved theme:", savedTheme);
+      if (savedTheme !== null) {
+        setDarkMode(savedTheme);
+      }
+    };
+
+    fetchTheme();
   }, []);
 
-  const styles = darkmode ? stylesdark : styleslight;
+  const toggleSwitch = async () => {
+    const newValue = !darkMode;
+    setDarkMode(newValue);
+    await AsyncStorage.setItem("darkMode", JSON.stringify(newValue));
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>darkmode: {darkmode ? "on" : "off"}</Text>
-      <Pressable style={styles.press} onPress={onPressFunction}>
-        <Text style={styles.presstext}>Toggle Dark Mode</Text>
-      </Pressable>
+    <View style={[styles.container, darkMode ? styles.dark : styles.light]}>
+      <Text
+        style={[styles.text, darkMode ? styles.darkText : styles.lightText]}
+      >
+        Dark Mode
+      </Text>
+      <Switch onValueChange={toggleSwitch} value={darkMode} />
     </View>
   );
-}
+};
 
-const styleslight = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dark: {
+    backgroundColor: "#000",
+  },
+  light: {
     backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
   },
   text: {
-    color: "#000",
-    fontSize: 18,
-    marginBottom: 20,
+    fontSize: 20,
+    marginBottom: 10,
   },
-  press: {
-    backgroundColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
+  darkText: {
+    color: "#fff",
   },
-  presstext: {
+  lightText: {
     color: "#000",
   },
 });
 
-const stylesdark = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#121212",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: "#fff",
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  press: {
-    backgroundColor: "#333",
-    padding: 10,
-    borderRadius: 5,
-  },
-  presstext: {
-    color: "#fff",
-  },
-});
+export default SettingsScreen;
