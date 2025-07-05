@@ -11,14 +11,39 @@ import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
+import getData from "./GetData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function App() {
+  const [darkmode, setDarkMode] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      const savedTheme = await getData("darkmode");
+      if (savedTheme !== null) {
+        setDarkMode(savedTheme);
+      }
+      setIsReady(true);
+    };
+    loadTheme();
+  }, []);
+
+  const handleSetDarkMode = async (value) => {
+    setDarkMode(value);
+    await AsyncStorage.setItem("darkmode", JSON.stringify(value));
+  };
+
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-
             if (route.name === "Home") {
               iconName = focused ? "home" : "home-outline";
             } else if (route.name === "Settings") {
@@ -26,17 +51,27 @@ export default function App() {
             } else if (route.name === "Hotspots") {
               iconName = focused ? "flame" : "flame-outline";
             }
-
-            // Return the icon component
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "gray",
+          tabBarActiveTintColor: darkmode ? "#fff" : "tomato",
+          tabBarInactiveTintColor: darkmode ? "#aaa" : "gray",
+          tabBarStyle: { backgroundColor: darkmode ? "#000" : "#fff" },
         })}
       >
-        <Tab.Screen name="Home" component={MapScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-        <Tab.Screen name="Hotspots" component={HotspotScreen} />
+        <Tab.Screen name="Home">
+          {() => <MapScreen darkmode={darkmode} />}
+        </Tab.Screen>
+        <Tab.Screen name="Settings">
+          {() => (
+            <SettingsScreen
+              darkmode={darkmode}
+              setDarkMode={handleSetDarkMode}
+            />
+          )}
+        </Tab.Screen>
+        <Tab.Screen name="Hotspots">
+          {() => <HotspotScreen darkmode={darkmode} />}
+        </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
   );
