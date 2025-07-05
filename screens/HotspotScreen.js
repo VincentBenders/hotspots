@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import getData from "../GetData";
 
 export default function HotspotScreen({ navigation }) {
   const [points, setPoints] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [darkmode, setDarkmode] = useState(false);
+  const isFocused = useIsFocused();
+
   const fetchPoints = async () => {
     const response = await fetch(
       "https://raw.githubusercontent.com/VincentBenders/hotspots/refs/heads/main/coords/random_rotterdam_coords.json",
@@ -15,7 +19,6 @@ export default function HotspotScreen({ navigation }) {
     );
 
     const data = await response.json();
-    console.log(data.coordinates);
     setPoints(data.coordinates);
   };
 
@@ -61,23 +64,23 @@ export default function HotspotScreen({ navigation }) {
   useEffect(() => {
     fetchPoints();
     getFavorites();
-    const fetchTheme = async () => {
-      const savedTheme = await getData("darkMode");
-      console.log("Saved theme:", savedTheme);
-      if (savedTheme !== null) {
-        setDarkMode(savedTheme);
-      }
+    const loadDarkMode = async () => {
+      const storedTheme = await getData("darkMode");
+      console.log("HotspotScreen darkMode:", storedTheme);
+      setDarkmode(storedTheme ?? false);
     };
 
-    fetchTheme();
-  }, []);
-
+    if (isFocused) {
+      loadDarkMode();
+    }
+  }, [isFocused]);
   const styles = darkmode ? stylesDark : stylesLight;
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        Select a hotspot to focus on or favorite it:
+    <View style={[styles.container, darkmode ? styles.dark : styles.light]}>
+      <Text
+        style={[styles.text, darkmode ? styles.textDark : styles.textLight]}
+      >
+        Hotspot Screen
       </Text>
       {points.map((point) => (
         <View key={point.id} style={styles.pointRow}>

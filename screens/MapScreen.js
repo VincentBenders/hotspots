@@ -16,7 +16,6 @@ export default function MapScreen({ route }) {
     );
 
     const data = await response.json();
-    console.log(data.coordinates);
     setPoints(data.coordinates);
   }
 
