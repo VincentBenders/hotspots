@@ -23,8 +23,6 @@ export default function HotspotScreen(props) {
     setPoints(data.coordinates);
   };
 
-  // Removed unused focusOnPoint
-
   const getFavorites = async () => {
     try {
       const value = await AsyncStorage.getItem("favorites");
