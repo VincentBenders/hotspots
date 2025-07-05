@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getData from "../GetData";
 
-export default function HotspotScreen({ navigation }) {
+export default function HotspotScreen(props) {
+  const navigation = useNavigation();
   const [points, setPoints] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [darkmode, setDarkmode] = useState(false);
@@ -22,11 +23,7 @@ export default function HotspotScreen({ navigation }) {
     setPoints(data.coordinates);
   };
 
-  const focusOnPoint = () => {
-    navigation.navigate("Home", {
-      focusPoint: point,
-    });
-  };
+  // Removed unused focusOnPoint
 
   const getFavorites = async () => {
     try {
