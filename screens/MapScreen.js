@@ -63,12 +63,6 @@ export default function MapScreen({ route }) {
             }}
           />
         ))}
-        {/* <Marker
-      key={1}
-      coordinate={points[4]}
-      title={''}
-      description={''}
-    /> */}
       </MapView>
     </View>
   );
