@@ -1,9 +1,7 @@
-// SettingsScreen.js
 import React, { useState, useEffect } from "react";
 import { View, Text, Switch, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import getData from "../GetData"; // Adjust path if needed
-
+import getData from "../GetData";
 
 const SettingsScreen = ({ darkmode, setDarkMode }) => {
   const toggleSwitch = () => {

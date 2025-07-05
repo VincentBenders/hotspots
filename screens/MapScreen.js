@@ -47,7 +47,7 @@ export default function MapScreen({ route }) {
           longitudeDelta: 0.01,
         },
         1000
-      ); // duration in ms
+      );
     }
   }, [focusPoint]);
 
