@@ -60,8 +60,8 @@ export default function HotspotScreen(props) {
     fetchPoints();
     getFavorites();
     const loadDarkMode = async () => {
-      const storedTheme = await getData("darkMode");
-      console.log("HotspotScreen darkMode:", storedTheme);
+      const storedTheme = await getData("darkmode");
+      console.log("HotspotScreen darkmode:", storedTheme);
       setDarkmode(storedTheme ?? false);
     };
 

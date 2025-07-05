@@ -5,11 +5,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getData from "../GetData"; // Adjust path if needed
 
 const SettingsScreen = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkmode, setDarkMode] = useState(false);
 
   useEffect(() => {
     const fetchTheme = async () => {
-      const savedTheme = await getData("darkMode");
+      const savedTheme = await getData("darkmode");
       console.log("Saved theme:", savedTheme);
       if (savedTheme !== null) {
         setDarkMode(savedTheme);
@@ -20,19 +20,19 @@ const SettingsScreen = () => {
   }, []);
 
   const toggleSwitch = async () => {
-    const newValue = !darkMode;
+    const newValue = !darkmode;
     setDarkMode(newValue);
-    await AsyncStorage.setItem("darkMode", JSON.stringify(newValue));
+    await AsyncStorage.setItem("darkmode", JSON.stringify(newValue));
   };
 
   return (
-    <View style={[styles.container, darkMode ? styles.dark : styles.light]}>
+    <View style={[styles.container, darkmode ? styles.dark : styles.light]}>
       <Text
-        style={[styles.text, darkMode ? styles.darkText : styles.lightText]}
+        style={[styles.text, darkmode ? styles.darkText : styles.lightText]}
       >
         Dark Mode
       </Text>
-      <Switch onValueChange={toggleSwitch} value={darkMode} />
+      <Switch onValueChange={toggleSwitch} value={darkmode} />
     </View>
   );
 };
