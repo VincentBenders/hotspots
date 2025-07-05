@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { StyleSheet, View } from "react-native";
 import * as Location from "expo-location";
 
-export default function MapScreen() {
+export default function MapScreen({ route }) {
   const [points, setPoints] = useState([]);
+  const mapRef = useRef(null);
+  const focusPoint = route?.params?.focusPoint;
   async function fetchPoints() {
     const response = await fetch(
       "https://raw.githubusercontent.com/VincentBenders/hotspots/refs/heads/main/coords/random_rotterdam_coords.json",
@@ -37,11 +39,22 @@ export default function MapScreen() {
   useEffect(() => {
     askPermission();
     fetchPoints();
-  }, []);
+    if (focusPoint && mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: focusPoint.latitude,
+          longitude: focusPoint.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      ); // duration in ms
+    }
+  }, [focusPoint]);
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} showsUserLocation={true}>
+      <MapView style={styles.map} showsUserLocation={true} ref={mapRef}>
         {points.map((point) => (
           <Marker
             key={point.id}
@@ -65,7 +78,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
- 
+
   map: {
     width: "100%",
     height: "100%",
