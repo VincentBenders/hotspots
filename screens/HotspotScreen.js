@@ -81,7 +81,14 @@ export default function HotspotScreen(props) {
         <View key={point.id} style={styles.pointRow}>
           <Pressable
             style={styles.press}
-            onPress={() => navigation.navigate("Home", { focusPoint: point })}
+            onPress={() =>
+              navigation.navigate("Home", {
+                location: {
+                  latitude: point.latitude,
+                  longitude: point.longitude,
+                },
+              })
+            }
           >
             <Text style={styles.presstext}>
               lat: {point.latitude} lon: {point.longitude}
